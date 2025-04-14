@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>홈페이지</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Home</a>
+      <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+          <!-- 🚨 로그인 여부 확인 -->
+          <li class="nav-item" th:if="${userId}">
+            <span class="nav-link">안녕하세요, <b th:text="${userId}"></b> 님!</span>
+          </li>
+          <li class="nav-item" th:if="${userId}">
+            <a class="btn btn-outline-light" th:href="@{/mypage}">마이페이지</a>
+            <a class="btn btn-outline-light" href="/logout">로그아웃</a>
+          </li>
+          <li class="nav-item" th:if="${userId == null}">
+            <a class="btn btn-outline-light" th:href="@{/login}">로그인</a>
+            <a class="btn btn-outline-light" th:href="@{/register}">회원가입</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main>
+
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">게시판</h1>
+        <p class="lead text-body-secondary">여기에 사용자들이 게시물을 올리고 공유할 수 있습니다.</p>
+
+        <!-- 🚨 로그인한 사용자만 게시물 작성 가능 -->
+        <p th:if="${username}">
+          <a href="/posts/create" class="btn btn-primary my-2">게시물 작성</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <div class="album py-5 bg-body-tertiary">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        <div class="col" th:each="post : ${posts}">
+          <div class="card shadow-sm" th:onclick="|window.location.href='@{/posts/{id}(id=${post.id})}'|" style="cursor: pointer;">
+            <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
+                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                 preserveAspectRatio="xMidYMid slice" focusable="false">
+              <title>Placeholder</title>
+              <rect width="100%" height="100%" fill="#55595c"></rect>
+              <text x="50%" y="50%" fill="#eceeef" dy=".3em">준비중..</text>
+            </svg>
+
+            <div class="card-body">
+              <p class="card-text" th:text="${post.title}">제목</p>
+
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-sm btn-outline-secondary"
+                          th:text="|작성자(${post.user != null ? post.user.username : '알 수 없음'})|">
+                  </button>
+
+                  <!-- ✅ 로그인한 사용자만 수정/삭제 버튼 표시 -->
+
+                </div>
+                <!-- ✅ 로그인한 사용자와 게시글 작성자가 동일한 경우만 수정/삭제 버튼 표시 -->
+                <!-- ✅ 수정 & 삭제 버튼 (현재 로그인한 사용자가 글 작성자인 경우만 표시) -->
+                <!-- ✅ 현재 로그인한 사용자가 글 작성자인 경우만 수정/삭제 버튼 표시 -->
+                <span th:if="${loggedInUser != null and post.user != null and loggedInUser == post.user.username}">
+                    <a th:href="@{/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-outline-warning">수정</a>
+                    <form th:action="@{/posts/delete/{id}(id=${post.id})}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('정말 삭제하시겠습니까?');">
+                            삭제
+                        </button>
+                    </form>
+                </span>
+
+                <small class="text-body-secondary"
+                       th:text="${post.creDt != null ? #temporals.format(post.creDt, 'yyyy-MM-dd HH:mm') : '시간 정보 없음'}">
+                  작성시간
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="text-center py-4">
+  <p>&copy; 2024 MyApp</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
