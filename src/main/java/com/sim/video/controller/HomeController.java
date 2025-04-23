@@ -1,5 +1,6 @@
 package com.sim.video.controller;
 
+import com.sim.video.dto.TmdbMovieDto;
 import com.sim.video.dto.TmdbTvDto;
 import com.sim.video.service.TMDBService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        var movies = tmdbService.getPopularMovies();
+        List<TmdbMovieDto> movies = tmdbService.getPopularMovies();
         model.addAttribute("popularMovies", movies);
 
         if (movies.isEmpty()) {
@@ -32,7 +33,7 @@ public class HomeController {
     @ResponseBody
     @GetMapping("/popularTV")
     public List<TmdbTvDto> getPopularTV() {
-        var tvList = tmdbService.getPopularTV();
+        List<TmdbTvDto> tvList = tmdbService.getPopularTV();
 //        System.out.println("/popularTv 요청 들옴");
         // TV가 비어있으면 JS가 처리
         return tvList;
