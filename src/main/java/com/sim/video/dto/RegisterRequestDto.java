@@ -10,22 +10,19 @@ public record RegisterRequestDto (
     String userId,
 
     @NotBlank
-    @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\\\d)(?=.*[~!@#$%^&*()_+=`{}\\\\[\\\\]:;\\\"'<>,.?/\\\\\\\\|-]).{8,300}$",message = "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*]).{8,}$", message = "비밀번호는 영문 대/소문자, 숫자, 특수문자를 포함해 8자 이상")
     String password,
 
     @Email(message = "유효한 이메일 형식이어야 합니다.")
     @Size(max = 30)
     String email,
 
-    @Min(0) @Max(120)
     Integer age,
 
-    @Pattern(regexp = "^\\\\d{11}$",message = "전화번호는 숫자 11자리여야 합니다")
+    @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "010-0000-0000 형식이어야 합니다")
     String phoneNum,
 
     @NotNull
-    User.Role role,
-
     User.Gender gen
     ){
 

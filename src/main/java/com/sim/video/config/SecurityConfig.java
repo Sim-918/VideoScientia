@@ -52,9 +52,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                //todo csrf disable 지우기
                 .csrf(csrf -> csrf.disable()) //현재 폼기반이 아닌 REST API만 사용하기 떄문에 잠깐 꺼둠
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/","/popularTV","/register", "/login", "/css/**", "/js/**").permitAll() //인증없이 접근 가능 경로
+                        .requestMatchers("/","/popularTV","/register", "/login","/api/check-id", "/api/check-email","/favicon.ico", "/css/**", "/js/**").permitAll() //인증없이 접근 가능 경로
                         .anyRequest().authenticated()   //나머지 요청 인증
                 )
                 .build();

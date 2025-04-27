@@ -27,7 +27,7 @@ public class HomeController {
             model.addAttribute("errorMovieMessage", "TMDB에서 인기 영화를 불러올 수 없습니다.");
         }
 
-        return "home(real)";
+        return "home";
     }
 
     @ResponseBody

@@ -1,112 +1,178 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>홈페이지</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Scientia</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Glide.js (슬라이더) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.6.0/css/glide.core.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!--    -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/home.css}" />
 </head>
+
 <body>
-
-<header>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">Home</a>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <!-- 🚨 로그인 여부 확인 -->
-          <li class="nav-item" th:if="${userId}">
-            <span class="nav-link">안녕하세요, <b th:text="${userId}"></b> 님!</span>
-          </li>
-          <li class="nav-item" th:if="${userId}">
-            <a class="btn btn-outline-light" th:href="@{/mypage}">마이페이지</a>
-            <a class="btn btn-outline-light" href="/logout">로그아웃</a>
-          </li>
-          <li class="nav-item" th:if="${userId == null}">
-            <a class="btn btn-outline-light" th:href="@{/login}">로그인</a>
-            <a class="btn btn-outline-light" th:href="@{/register}">회원가입</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</header>
-
-<main>
-
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">게시판</h1>
-        <p class="lead text-body-secondary">여기에 사용자들이 게시물을 올리고 공유할 수 있습니다.</p>
-
-        <!-- 🚨 로그인한 사용자만 게시물 작성 가능 -->
-        <p th:if="${username}">
-          <a href="/posts/create" class="btn btn-primary my-2">게시물 작성</a>
-        </p>
-      </div>
-    </div>
-  </section>
-
-
-  <div class="album py-5 bg-body-tertiary">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
-        <div class="col" th:each="post : ${posts}">
-          <div class="card shadow-sm" th:onclick="|window.location.href='@{/posts/{id}(id=${post.id})}'|" style="cursor: pointer;">
-            <svg class="bd-placeholder-img card-img-top" width="100%" height="225"
-                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
-                 preserveAspectRatio="xMidYMid slice" focusable="false">
-              <title>Placeholder</title>
-              <rect width="100%" height="100%" fill="#55595c"></rect>
-              <text x="50%" y="50%" fill="#eceeef" dy=".3em">준비중..</text>
-            </svg>
-
-            <div class="card-body">
-              <p class="card-text" th:text="${post.title}">제목</p>
-
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary"
-                          th:text="|작성자(${post.user != null ? post.user.username : '알 수 없음'})|">
-                  </button>
-
-                  <!-- ✅ 로그인한 사용자만 수정/삭제 버튼 표시 -->
-
-                </div>
-                <!-- ✅ 로그인한 사용자와 게시글 작성자가 동일한 경우만 수정/삭제 버튼 표시 -->
-                <!-- ✅ 수정 & 삭제 버튼 (현재 로그인한 사용자가 글 작성자인 경우만 표시) -->
-                <!-- ✅ 현재 로그인한 사용자가 글 작성자인 경우만 수정/삭제 버튼 표시 -->
-                <span th:if="${loggedInUser != null and post.user != null and loggedInUser == post.user.username}">
-                    <a th:href="@{/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-outline-warning">수정</a>
-                    <form th:action="@{/posts/delete/{id}(id=${post.id})}" method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-sm btn-outline-danger"
-                                onclick="return confirm('정말 삭제하시겠습니까?');">
-                            삭제
-                        </button>
-                    </form>
-                </span>
-
-                <small class="text-body-secondary"
-                       th:text="${post.creDt != null ? #temporals.format(post.creDt, 'yyyy-MM-dd HH:mm') : '시간 정보 없음'}">
-                  작성시간
-                </small>
-              </div>
+        <a class="navbar-brand fw-bold" href="#">Video Scientia</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/"><i class="bi bi-house-door me-1"></i>홈</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-film me-1"></i>영화</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-tv me-1"></i>TV</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="bi bi-person me-1"></i>프로필</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="/login" class="btn btn-outline-secondary me-2">로그인</a>
+                <a href="/register" class="btn btn-primary">회원가입</a>
             </div>
-          </div>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    <!-- Search Bar -->
+    <div class="search-bar mb-4">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="검색어 입력">
+            <button class="btn btn-primary" type="button"><i class="bi bi-search"></i> 검색</button>
+        </div>
+    </div>
+
+    <!-- Featured Content -->
+    <section class="featured-content mb-5">
+        <h2 class="section-title mb-3"><i class="bi bi-dice-5 me-2"></i>오늘의 추천</h2>
+        <div class="featured-card card border-0 overflow-hidden">
+            <div class="featured-image position-relative">
+                <img src="https://via.placeholder.com/800x400" alt="Inception" class="img-fluid w-100">
+                <div class="featured-overlay position-absolute bottom-0 start-0 end-0 p-4">
+                    <h3 class="featured-title"><i class="bi bi-film"></i> Inception</h3>
+                    <p class="featured-description">A thief who steals corporate secrets through the use of
+                        dream-sharing technology is given the inverse task of planting an idea into the mind of a
+                        C.E.O.</p>
+                    <div class="content-actions d-flex gap-2">
+                        <button class="btn btn-outline-light btn-sm like-btn">
+                            <i class="bi bi-heart me-1"></i>좋아요
+                        </button>
+                        <button class="btn btn-outline-light btn-sm favorite-btn">
+                            <i class="bi bi-star me-1"></i>즐겨찾기
+                        </button>
+                        <a href="/movie/1" class="btn btn-primary btn-sm">
+                            상세보기 <i class="bi bi-chevron-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Content -->
+    <section class="popular-content mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="section-title mb-0">📈 인기 콘텐츠 리스트</h2>
+            <div class="content-filter">
+                <ul class="nav nav-tabs" id="contentTabs"  role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-tab="movie" type="button">영화</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-tab="tv" type="button">TV</button>
+                    </li>
+                </ul>
+            </div>
         </div>
 
-      </div>
-    </div>
-  </div>
 
+
+        <!-- 영화 콘텐츠 (SSR 렌더링) -->
+        <div id="movie-content" class="glide">
+            <div class="glide__track" data-glide-el="track">
+                <ul class="glide__slides">
+                    <li class="glide__slide" th:each="movie : ${popularMovies}">
+                        <div class="card h-100">
+                            <img th:src="@{'https://image.tmdb.org/t/p/w300' + ${movie.posterPath}}" class="card-img-top"
+                                 th:alt="${movie.title}" />
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="bi bi-film"></i> <span th:text="${movie.title}">제목</span></h5>
+                                <p class="card-text text-muted">평점: <span th:text="${movie.voteAverage}"></span></p>
+                                <div class="content-actions">
+                                    <button class="btn btn-outline-secondary btn-sm like-btn">
+                                        <i class="bi bi-heart me-1"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary btn-sm favorite-btn">
+                                        <i class="bi bi-star me-1"></i>
+                                    </button>
+                                    <a href="/movie/1" class="btn btn-outline-primary btn-sm ms-auto">
+                                        <i class="bi bi-chevron-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="glide__arrows" data-glide-el="controls">
+                <button class="glide__arrow glide__arrow--left" data-glide-dir="<"><i class="bi bi-chevron-left"></i></button>
+                <button class="glide__arrow glide__arrow--right" data-glide-dir=">"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+
+        <!-- TV 콘텐츠(비동기) -->
+        <div id="tv-content" class="glide mt-4" style="display: none;">
+            <div class="glide__track" data-glide-el="track">
+                <ul class="glide__slides" id="tv-slides">
+                    <!-- js로 삽입 -->
+                </ul>
+            </div>
+            <div class="glide__arrows" data-glide-el="controls">
+                <button class="glide__arrow glide__arrow--left" data-glide-dir="<"><i class="bi bi-chevron-left"></i></button>
+                <button class="glide__arrow glide__arrow--right" data-glide-dir=">"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
 </main>
 
-<footer class="text-center py-4">
-  <p>&copy; 2024 MyApp</p>
-</footer>
+<!-- Toast Container -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong id="toastTitle" class="me-auto"></strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div id="toastMessage" class="toast-body"></div>
+    </div>
+</div>
 
+<!-- 필요한 라이브러리 -->
+<!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Glide.js (슬라이더) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.6.0/glide.min.js"></script>
+<!-- Custom JS -->
+<script src="script.js"></script>
+<!--    -->
+<script th:src="@{/js/home.js}"></script>
 </body>
+
 </html>

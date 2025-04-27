@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-
+//todo 엔터티에서 값을 바로 대입하지 않고 생성자에 선언을 해야함
 @Entity
 @Table(name="user")
 @Getter
@@ -49,7 +49,7 @@ public class User extends BaseEntity {
     @Column(length = 1)
     private Gender gen;
 
-    @Column(length = 11)
+    @Column(length = 13)
     private String phoneNum;
 
     @Builder

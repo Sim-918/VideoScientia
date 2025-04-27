@@ -1,198 +1,109 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>SB Admin 2 - Register</title>
-
-    <!-- Custom fonts for this template-->
-    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
-
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>회원가입</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-primary">
-
-    <div class="container">
-
-        <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0">
-                <!-- Nested Row within Card Body -->
-                <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-                    <div class="col-lg-7">
-                        <div class="p-5">
-                            <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
-                            </div>
-                            <form th:action="@{/register}" method="post" class="user" id="registerForm">
-                                <div class="form-group">
-                                    <input type="text" class="form-control form-control-user" id="userId" name="userId" placeholder="ID (8자 이상)">
-                                </div>
-                                <div class="form-group">
-                                    <input type="tel" class="form-control form-control-user" id="phoneNum" name="phoneNum" placeholder="000-0000-0000">
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="email" name="email" placeholder="Email Address">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" class="form-control form-control-user" id="password" name="password" placeholder="Password (10자 이상, 특수문자 포함)">
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-user btn-block" id="submitBtn" disabled>
-                                    Register Account
-                                </button>
-                            </form>
-                            <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
-                            <hr>
-                            <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div>
-                            <div class="text-center">
-                                <a class="small" href="login.html">Already have an account? Login!</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<body class="bg-gray-100 font-sans">
+<main class="flex items-center justify-center min-h-screen p-4">
+    <section class="w-full max-w-md bg-white p-6 rounded-xl shadow-lg">
+        <div class="text-center mb-6">
+            <div class="w-12 h-12 mx-auto mb-3 flex items-center justify-center rounded-full bg-blue-100">
+                <i class="bi bi-person-plus-fill text-blue-600 text-2xl"></i>
             </div>
+            <h1 class="text-2xl font-semibold">📝 회원가입</h1>
         </div>
 
-    </div>
+<!--        <form id="registerForm" class="space-y-4" method="post" th:action="@{/register}">-->
+        <form id="registerForm" class="space-y-4">
+            <div>
+                <label for="userId" class="block text-sm font-medium text-gray-700">아이디</label>
+                <input type="text" id="userId" name="userId" required
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 validate-input"
+                       data-validate="userId">
+                <div id="userIdError" class="text-red-600 text-sm mt-1 hidden"></div>
+                <div id="serverUserIdError" th:text="${userIdError}" class="hidden"></div>
+            </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
-    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">이메일</label>
+                <input type="email" id="email" name="email" required
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 validate-input"
+                       data-validate="email">
+                <div id="emailError" class="text-red-600 text-sm mt-1 hidden"></div>
+                <div id="serverEmailError" th:text="${emailError}" class="hidden"></div>
+            </div>
 
-    <!-- Core plugin JavaScript-->
-    <script th:src="@{/vendor/jquery-easing/jquery.easing.min.js}"></script>
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">비밀번호</label>
+                <input type="password" id="password" name="password" required
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 validate-input"
+                       data-validate="password">
+                <div id="passwordError" class="text-red-600 text-sm mt-1 hidden"></div>
+            </div>
 
-    <!-- Custom scripts for all pages-->
-    <script th:src="@{/js/sb-admin-2.min.js}"></script>
+            <div>
+                <label for="confirmPassword" class="block text-sm font-medium text-gray-700">비밀번호 확인</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 validate-input"
+                       data-validate="confirmPassword">
+                <div id="confirmPasswordError" class="text-red-600 text-sm mt-1 hidden"></div>
+            </div>
 
-    <!-- valid-->
-    <script>
-        const userIdInput = document.getElementById("userId");
-        const phoneInput = document.getElementById("phoneNum");
-        const emailInput = document.getElementById("email");
-        const passwordInput = document.getElementById("password");
-        const submitBtn = document.getElementById("submitBtn");
-        const registerForm = document.getElementById("registerForm");
+            <div class="form-group">
+                <input type="tel" id="phoneNum" name="phoneNum" placeholder="010-0000-0000"
+                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 validate-input form-control form-control-user"
+                       data-validate="phoneNum">
+                <div id="phoneNumError" class="text-red-600 text-sm mt-1 hidden"></div>
+            </div>
 
-        const errorUserId = document.createElement("div");
-        const errorPhone = document.createElement("div");
-        const errorEmail = document.createElement("div");
-        const errorPassword = document.createElement("div");
-        [errorUserId, errorPhone, errorEmail, errorPassword].forEach(e => {
-            e.className = "text-danger mt-1 small";
-        });
+            <div>
+                <label for="gen" class="block text-sm font-medium text-gray-700">성별</label>
+                <select id="gen" name="gen" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 validate-input"
+                        data-validate="gen">
+                    <option value="">선택하세요</option>
+                    <option value="M">남성</option>
+                    <option value="F">여성</option>
 
-        userIdInput.after(errorUserId);
-        phoneInput.after(errorPhone);
-        emailInput.after(errorEmail);
-        passwordInput.after(errorPassword);
+                </select>
+                <div id="genError" class="text-red-600 text-sm mt-1 hidden"></div>
+            </div>
 
-        // 정규표현식 검사 함수들
-        function isValidUserId(userId) {
-            return /^[a-zA-Z0-9]{8,20}$/.test(userId);
-        }
-        function isValidEmail(email) {
-            return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(email);
-        }
-        function isValidPassword(password) {
-            return /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]).{10,}$/.test(password);
-        }
-        function isValidPhone(phone) {
-            return /^\d{3}-\d{4}-\d{4}$/.test(phone);
-        }
-        function formatPhone(value) {
-            const digits = value.replace(/\D/g, "");
-            if (digits.length <= 3) return digits;
-            if (digits.length <= 7) return `${digits.slice(0, 3)}-${digits.slice(3)}`;
-            return `${digits.slice(0, 3)}-${digits.slice(3, 7)}-${digits.slice(7, 11)}`;
-        }
+            <div>
+                <label for="birthYear" class="block text-sm font-medium text-gray-700">출생 연도</label>
+                <select id="birthYear" name="birthYear" required
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 validate-input"
+                        data-validate="birthYear">
+                    <option value="">출생 연도를 선택하세요</option>
+                </select>
+                <div id="birthYearError" class="text-red-600 text-sm mt-1 hidden"></div>
+            </div>
 
-        // 1. 입력 유무에 따라 버튼 활성화
-        function checkIfFilled() {
-            const userId = userIdInput.value.trim();
-            const phone = phoneInput.value.trim();
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
+            <input type="hidden" id="age" name="age" />
 
-            submitBtn.disabled = !(userId && phone && email && password);
-        }
+            <button type="submit" id="submitBtn" disabled
+                    class="w-full bg-blue-400 text-white font-medium py-2 px-4 rounded-md transition cursor-not-allowed">
+                회원가입
+            </button>
 
-        // 2. 클릭 시 유효성 검사 (에러 메시지 표시)
-        registerForm.addEventListener("submit", function (e) {
-            const userId = userIdInput.value.trim();
-            const phone = phoneInput.value.trim();
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
+            <p class="text-center text-sm text-gray-500 mt-4">
+                이미 계정이 있으신가요?
+                <a href="/login" class="text-blue-600 hover:underline font-medium">로그인</a>
+            </p>
+        </form>
+    </section>
 
-            let valid = true;
-
-            if (!isValidUserId(userId)) {
-                errorUserId.textContent = "아이디는 영문+숫자 8~20자여야 합니다.";
-                valid = false;
-            } else {
-                errorUserId.textContent = "";
-            }
-
-            if (!isValidPhone(phone)) {
-                errorPhone.textContent = "전화번호는 000-0000-0000 형식입니다.";
-                valid = false;
-            } else {
-                errorPhone.textContent = "";
-            }
-
-            if (!isValidEmail(email)) {
-                errorEmail.textContent = "올바른 이메일 형식이 아닙니다.";
-                valid = false;
-            } else {
-                errorEmail.textContent = "";
-            }
-
-            if (!isValidPassword(password)) {
-                errorPassword.textContent = "비밀번호는 10자 이상, 숫자+특수문자를 포함해야 합니다.";
-                valid = false;
-            } else {
-                errorPassword.textContent = "";
-            }
-
-            if (!valid) {
-                e.preventDefault(); // 폼 제출 막기
-            }
-        });
-
-        // 3. 이벤트 바인딩 (입력 감지)
-        [userIdInput, phoneInput, emailInput, passwordInput].forEach(input => {
-            input.addEventListener("input", () => {
-                if (input === phoneInput) {
-                    phoneInput.value = formatPhone(phoneInput.value);
-                }
-                checkIfFilled();
-            });
-        });
-
-        // 4. 초기 상태 버튼 비활성화
-        submitBtn.disabled = true;
-    </script>
-
+    <!-- Toast 메시지 -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-blue-600 text-white px-4 py-2 rounded shadow-lg hidden opacity-0 transition-opacity duration-500 z-50"></div>
+</main>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/register.js}"></script>
 </body>
 
 </html>

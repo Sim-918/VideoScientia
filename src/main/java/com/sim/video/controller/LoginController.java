@@ -1,19 +1,35 @@
 package com.sim.video.controller;
 
+import com.sim.video.dto.LoginRequestDto;
+import com.sim.video.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.ErrorResponse;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
+@RequiredArgsConstructor
+@RequestMapping("/login")
 public class LoginController {
+    private final UserService userService;
 
-    @GetMapping("/login")
-//    todo value="error"가 어디 처리 되는지 찾기
-    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
-        if (error != null) {
-            model.addAttribute("loginError", "아이디 또는 비밀번호가 잘못되었습니다.");
-        }
+    @GetMapping
+    public String loginPage(){
         return "login";
     }
+
+    @PostMapping
+    @ResponseBody
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto requestDto){
+        try{
+            userService.login(requestDto);
+            return ResponseEntity.ok().build();
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+
+        }
+    }
+    private record ErrorResponse(String message){}
 }
