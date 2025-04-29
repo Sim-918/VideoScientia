@@ -5,9 +5,14 @@ import com.sim.video.dto.LoginRequestDto;
 import com.sim.video.dto.RegisterRequestDto;
 import com.sim.video.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor // final필드 대상 생성자 자동 생성
@@ -29,7 +34,7 @@ public class UserService {
                 .userId(dto.userId())
                 .password(passwordEncoder.encode(dto.password()))
                 .email(dto.email())
-                .role(User.Role.U)
+                .role(User.Role.ROLE_USER)
                 .age(dto.age())
                 .gen(dto.gen())
                 .phoneNum(dto.phoneNum())
@@ -38,12 +43,12 @@ public class UserService {
     }
     
     //로그인 처리
-    public void login(LoginRequestDto dto){
-        User user=userRepository.findByUserId(dto.userId())
-                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 아이디입니다."));
-        if (!passwordEncoder.matches(dto.password(),user.getPassword())){
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        //세션 생성 등 추후 추가
-    }
+//    public void login(LoginRequestDto dto){
+//        User user=userRepository.findByUserId(dto.userId())
+//                .orElseThrow(()->new IllegalArgumentException("존재하지 않는 아이디입니다."));
+//        if (!passwordEncoder.matches(dto.password(),user.getPassword())){
+//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+//        }
+//    }
+    //세션 생성 등 추후 추가
 }

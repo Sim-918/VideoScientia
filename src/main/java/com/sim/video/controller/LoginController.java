@@ -20,16 +20,18 @@ public class LoginController {
         return "login";
     }
 
-    @PostMapping
-    @ResponseBody
-    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto requestDto){
-        try{
-            userService.login(requestDto);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e){
-            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
 
-        }
-    }
-    private record ErrorResponse(String message){}
+    //이제 이코드는 필요없다. UserDetailsService 기반에 자동 로그인을 구현했고 /login은 Security알아서 처리하게 만들었다.
+//    @PostMapping
+//    @ResponseBody
+//    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto requestDto){
+//        try{
+//            userService.login(requestDto);
+//            return ResponseEntity.ok().build();
+//        } catch (IllegalArgumentException e){
+//            return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
+//
+//        }
+//    }
+//    private record ErrorResponse(String message){}
 }

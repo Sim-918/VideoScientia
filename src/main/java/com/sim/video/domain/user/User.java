@@ -26,7 +26,7 @@ public class User extends BaseEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false,length = 1)
+    @Column(nullable = false,length = 20)
     private Role role;
 
     @Enumerated(EnumType.STRING)
@@ -80,9 +80,9 @@ public class User extends BaseEntity {
     public enum Gender {
         M, F
     }
-
+    //spring security가 요구하는 권한 ROLE_ 가 prefix이다
     public enum Role {
-        A, U
+        ROLE_ADMIN, ROLE_USER
     }
 
     public enum Yn {

@@ -12,47 +12,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 폼 제출 fetch
     form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (isLoading) return;
+            e.preventDefault();
+            if (isLoading) return;
 
-        isLoading = true;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = `<span class="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></span>로그인 중...`;
+            isLoading = true;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></span>로그인 중...`;
 
-        const formData = {
-            userId: form.userId.value,
-            password: form.password.value
-        };
+            const formData = new URLSearchParams();
+            formData.append('username', form.userId.value);
+            formData.append('password', form.password.value);
 
-        try {
-        //로그인 요청 보내기
-            const response = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
+            try {
+            //로그인 요청 보내기
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData
+                });
 
-            if (response.ok) {
-            //로그인 성공
-                //showToast('로그인 성공', '환영합니다! 성공적으로 로그인되었습니다.', 'success');
-                setTimeout(() => window.location.href = '/', 500);
-            } else {
-            //로그인 실패
-                const resJson = await response.json();
-                showToast('로그인 실패', resJson.message || '아이디 또는 비밀번호를 확인해주세요.', 'error');
+                if (response.ok) {
+                //로그인 성공
+                    //showToast('로그인 성공', '환영합니다! 성공적으로 로그인되었습니다.', 'success');
+                    setTimeout(() => window.location.href = '/', 500);
+                } else {
+                //로그인 실패
+                    const resJson = await response.json();
+                    showToast('로그인 실패', resJson.message || '아이디 또는 비밀번호를 확인해주세요.', 'error');
+                }
+            } catch (err) {
+                // 서버 통신 에러
+                showToast('오류', '서버와 통신에 실패했습니다.', 'error');
+            } finally {
+                //요청 완료 후 버튼 상태 복구
+                isLoading = false;
+                submitBtn.disabled = false;
+                submitBtn.textContent = '로그인';
             }
-        } catch (err) {
-            // 서버 통신 에러
-            showToast('오류', '서버와 통신에 실패했습니다.', 'error');
-        } finally {
-            //요청 완료 후 버튼 상태 복구
-            isLoading = false;
-            submitBtn.disabled = false;
-            submitBtn.textContent = '로그인';
-        }
-    });
+        });
 
     function showToast(title, message, type) {
         toastHeader.textContent = title;
