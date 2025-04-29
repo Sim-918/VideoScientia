@@ -43,7 +43,7 @@
 
 # ERD (Entity-Relationship Diagram)
 
-![ERD](./docs/erd.png)
+![ERD](./erd.png)
 
 ---
 
