@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인셉션 - 영화 상세 정보</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Glide.js (슬라이더) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.6.0/css/glide.core.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<style>
+    /* 영화 상세 페이지 전용 스타일 */
+    .movie-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .movie-meta {
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+
+    .movie-overview {
+        line-height: 1.6;
+    }
+
+    .movie-trailer iframe {
+        border: none;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 좋아요/즐겨찾기 버튼 활성 상태 */
+    .like-btn.active,
+    .favorite-btn.active {
+        color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .like-btn.active i.bi-heart,
+    .favorite-btn.active i.bi-star {
+        fill: #0d6efd;
+    }
+
+    /* 비슷한 콘텐츠 섹션 */
+    .similar-contents {
+        margin-top: 3rem;
+    }
+
+    /* 포스터 이미지 */
+    .ratio-2x3::before {
+        padding-top: 150%;
+        /* 2:3 비율 유지 */
+    }
+
+    /* 반응형 조정 */
+    @media (max-width: 768px) {
+        .movie-title {
+            font-size: 2rem;
+            margin-top: 1rem;
+        }
+
+        .content-actions {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+    }
+</style>
+
+<body>
+    <!-- Navbar (이전 코드와 동일하게 유지) -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">스트리밍 플랫폼</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-house-door me-1"></i>홈</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="bi bi-film me-1"></i>영화</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-tv me-1"></i>TV</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-star me-1"></i>즐겨찾기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="bi bi-person me-1"></i>프로필</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="/login" class="btn btn-outline-secondary me-2">로그인</a>
+                    <a href="/register" class="btn btn-primary">회원가입</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        <div class="row g-4 mb-5">
+            <!-- 포스터 이미지 -->
+            <div class="col-md-4">
+                <div class="position-relative ratio ratio-2x3">
+                    <img src="https://via.placeholder.com/300x450" alt="인셉션 포스터" class="img-fluid rounded">
+                </div>
+            </div>
+
+            <!-- 영화 정보 -->
+            <div class="col-md-8">
+                <h1 class="movie-title"><i class="bi bi-film"></i> 인셉션</h1>
+
+                <!-- 메타 정보 -->
+                <div class="movie-meta d-flex flex-wrap gap-3 mb-4">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-star-fill text-warning me-1"></i>
+                        <span>8.2</span>
+                    </div>
+                    <div>장르: 액션, 모험, SF</div>
+                    <div>개봉일: 2023-01-20</div>
+                </div>
+
+                <!-- 영화 개요 -->
+                <div class="movie-overview mb-4">
+                    <h2 class="h5 fw-bold mb-2">개요:</h2>
+                    <p class="text-muted">꿈과 현실의 경계가 모호해지는 세계에서 특수 보안 요원인 돔 코브는 타인의 꿈에 침투하여 생각을 훔치는 능력을 가진 도둑이다. 그의 특별한
+                        능력은 그를 기업 스파이 세계에서 가장 인기 있는 인물로 만들었지만, 그것은 또한 그를 국제적인 도망자로 만들었고 그가 사랑하는 모든 것을 빼앗았다.</p>
+                </div>
+
+                <!-- 액션 버튼 -->
+                <div class="content-actions mb-5">
+                    <button class="btn btn-outline-primary me-2 like-btn">
+                        <i class="bi bi-heart me-1"></i>좋아요
+                    </button>
+                    <button class="btn btn-outline-primary favorite-btn">
+                        <i class="bi bi-star me-1"></i>즐겨찾기
+                    </button>
+                </div>
+
+                <!-- 예고편 -->
+                <div class="movie-trailer mb-5">
+                    <h2 class="h4 fw-bold mb-3"><i class="bi bi-play-circle"></i> 예고편</h2>
+                    <div class="ratio ratio-16x9">
+                        <iframe src="https://www.youtube.com/embed/YoHD9XEInc0" title="인셉션 예고편" allowfullscreen
+                            class="rounded"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 비슷한 콘텐츠 -->
+        <section class="similar-contents mb-5">
+            <h2 class="h4 fw-bold mb-4"><i class="bi bi-collection"></i> 비슷한 콘텐츠</h2>
+            <div class="glide">
+                <div class="glide__track" data-glide-el="track">
+                    <ul class="glide__slides">
+                        <li class="glide__slide">
+                            <div class="card h-100">
+                                <img src="https://via.placeholder.com/200x300" class="card-img-top"
+                                    alt="The Dark Knight">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-film"></i> The Dark Knight</h5>
+                                    <div class="content-actions mt-2">
+                                        <button class="btn btn-outline-secondary btn-sm like-btn">
+                                            <i class="bi bi-heart"></i>
+                                        </button>
+                                        <button class="btn btn-outline-secondary btn-sm favorite-btn">
+                                            <i class="bi bi-star"></i>
+                                        </button>
+                                        <a href="/movie/2" class="btn btn-outline-primary btn-sm ms-auto">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <!-- 추가 비슷한 콘텐츠 아이템들... -->
+                    </ul>
+                </div>
+                <div class="glide__arrows" data-glide-el="controls">
+                    <button class="glide__arrow glide__arrow--left" data-glide-dir="<"><i
+                            class="bi bi-chevron-left"></i></button>
+                    <button class="glide__arrow glide__arrow--right" data-glide-dir=">"><i
+                            class="bi bi-chevron-right"></i></button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Container (이전 코드와 동일) -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong id="toastTitle" class="me-auto"></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div id="toastMessage" class="toast-body"></div>
+        </div>
+    </div>
+
+    <!-- 필요한 라이브러리 -->
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Glide.js (슬라이더) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Glide.js/3.6.0/glide.min.js"></script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Toast 초기화
+            const toastEl = document.getElementById('toast');
+            const toast = new bootstrap.Toast(toastEl);
+
+            // 좋아요/즐겨찾기 상태
+            let isLiked = false;
+            let isFavorited = false;
+            const movieId = '1'; // 실제로는 URL에서 파라미터로 가져옴
+            const movieTitle = '인셉션';
+
+            // 좋아요 버튼 클릭 핸들러
+            document.querySelectorAll('.like-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    isLiked = !isLiked;
+                    const icon = this.querySelector('i');
+
+                    // UI 업데이트
+                    this.classList.toggle('active');
+                    if (isLiked) {
+                        icon.classList.remove('bi-heart');
+                        icon.classList.add('bi-heart-fill');
+                    } else {
+                        icon.classList.remove('bi-heart-fill');
+                        icon.classList.add('bi-heart');
+                    }
+
+                    // 토스트 메시지
+                    showToast(
+                        isLiked ? '좋아요 성공' : '좋아요 취소',
+                        isLiked
+                            ? `"${movieTitle}"를 좋아요 목록에 추가했습니다.`
+                            : `"${movieTitle}"를 좋아요 목록에서 제거했습니다.`,
+                        'success'
+                    );
+                });
+            });
+
+            // 즐겨찾기 버튼 클릭 핸들러
+            document.querySelectorAll('.favorite-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    isFavorited = !isFavorited;
+                    const icon = this.querySelector('i');
+
+                    // UI 업데이트
+                    this.classList.toggle('active');
+                    if (isFavorited) {
+                        icon.classList.remove('bi-star');
+                        icon.classList.add('bi-star-fill');
+                    } else {
+                        icon.classList.remove('bi-star-fill');
+                        icon.classList.add('bi-star');
+                    }
+
+                    // 토스트 메시지
+                    showToast(
+                        isFavorited ? '즐겨찾기 성공' : '즐겨찾기 취소',
+                        isFavorited
+                            ? `"${movieTitle}"를 즐겨찾기 목록에 추가했습니다.`
+                            : `"${movieTitle}"를 즐겨찾기 목록에서 제거했습니다.`,
+                        'success'
+                    );
+                });
+            });
+
+            // 토스트 메시지 표시 함수
+            function showToast(title, message, type) {
+                const toastTitle = document.getElementById('toastTitle');
+                const toastMessage = document.getElementById('toastMessage');
+                const toastHeader = toastEl.querySelector('.toast-header');
+
+                // 헤더 클래스 초기화
+                toastHeader.className = 'toast-header';
+
+                // 타입에 따른 스타일 적용
+                if (type === 'success') {
+                    toastHeader.classList.add('bg-primary', 'text-white');
+                } else if (type === 'error') {
+                    toastHeader.classList.add('bg-danger', 'text-white');
+                } else {
+                    toastHeader.classList.add('bg-secondary', 'text-white');
+                }
+
+                // 내용 설정
+                toastTitle.textContent = title;
+                toastMessage.textContent = message;
+
+                // 토스트 표시
+                toast.show();
+            }
+
+            // 비슷한 콘텐츠 슬라이더 초기화
+            new Glide('.glide', {
+                type: 'carousel',
+                perView: 4,
+                gap: 20,
+                breakpoints: {
+                    1200: {
+                        perView: 3
+                    },
+                    768: {
+                        perView: 2
+                    },
+                    576: {
+                        perView: 1
+                    }
+                }
+            }).mount();
+        });
+    </script>
+</body>
+
+</html>

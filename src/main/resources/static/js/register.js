@@ -35,7 +35,7 @@ $(function () {
     confirmPassword: (v, p) => v === p,
     gen: v => !!v,
     birthYear: v => !!v,
-    phoneNum: v => /^\d{3}-\d{4}-\d{4}$/.test(v)
+    phoneNum: v => /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/.test(v)
   };
 
   // 각 입력값 통과 여부 플래그
@@ -148,7 +148,9 @@ $(function () {
     const $err = $("#confirmPasswordError");
 
     if (!validate.confirmPassword(val, passwordVal)) {
-      $err.text("비밀번호가 일치하지 않습니다.").removeClass("text-green-600 hidden").addClass("text-red-600");
+      $err.text("비밀번호가 일치하지 않습니다.")
+      .removeClass("text-green-600 hidden")
+      .addClass("text-red-600");
       confirmPasswordValid = false;
     } else {
       $err.text("비밀번호가 일치합니다.").removeClass("text-red-600 hidden").addClass("text-green-600");
