@@ -3,6 +3,17 @@
     --primary-light: rgba(13, 110, 253, 0.1);
 }
 
+@font-face {
+    font-family: 'NoonnuBasicGothicRegular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noon-2410@1.0/NoonnuBasicGothicRegular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'NoonnuBasicGothicRegular', sans-serif;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     background-color: #f8f9fa;
