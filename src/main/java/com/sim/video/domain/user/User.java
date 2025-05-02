@@ -2,6 +2,7 @@ package com.sim.video.domain.user;
 
 import com.sim.video.domain.common.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,10 +20,10 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @Column(nullable = false,unique = true,length = 30)
+    @Column(nullable = false,unique = true,length = 20)
     private String userId;
 
-    @Column(nullable = false,length = 300)
+    @Column(nullable = false,length = 50)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -31,17 +32,18 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,length = 1)
-    private Yn isDel=Yn.N;
+    private Yn isDel;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false,length = 1)
-    private Yn isLock=Yn.N;
+    private Yn isLock;
 
     @Column
-    private int pwFailCnt=0;
+    private int pwFailCnt;
 
     private Integer age;
 
+    @Email
     @Column(length = 30)
     private String email;
 
@@ -61,6 +63,9 @@ public class User extends BaseEntity {
         this.email = email;
         this.gen = gen;
         this.phoneNum = phoneNum;
+        this.isDel = Yn.N;
+        this.isLock = Yn.N;
+        this.pwFailCnt = 0;
     }
     //비밀번호 변경 도메인 메서드(setter막기)
     public void changePassword(String encodedPassword){

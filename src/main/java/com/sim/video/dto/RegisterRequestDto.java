@@ -19,7 +19,7 @@ public record RegisterRequestDto (
 
     Integer age,
 
-    @Pattern(regexp = "^\\d{3}-\\d{4}-\\d{4}$", message = "010-0000-0000 형식이어야 합니다")
+    @Pattern(regexp = "^(01[016789]|02|0[3-9][0-9])-?[0-9]{3,4}-?[0-9]{4}$", message = "010-0000-0000 형식이어야 합니다")
     String phoneNum,
 
     @NotNull
