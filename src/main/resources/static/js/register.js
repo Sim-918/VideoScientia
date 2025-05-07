@@ -1,24 +1,22 @@
 $(function () {
-  //현재 년도
+  // 현재 연도를 기준으로 출생년도 선택 옵션 생성
   const currentYear = new Date().getFullYear();
-
-  // 출생 연도 선택 옵션(1900~현재)
   for (let year = currentYear; year >= 1900; year--) {
     const option = $("<option>").val(year).text(`${year}년`);
     $("#birthYear").append(option);
   }
 
-  //출생연도 선택 후 나이를 자동 계산하여 age에 넣음
+  // 출생연도 선택 시 자동으로 나이 계산
   $("#birthYear").on("change", function () {
     const year = parseInt($(this).val(), 10);
     if (!isNaN(year)) {
-      $("#age").val(currentYear - year + 1);
+      $("#age").val(currentYear - year + 1); // 한국식 나이 계산
     }
   });
 
-  // 전화번호 입력 시 자동으로 하이폰추가
+  // 전화번호 입력 시 자동으로 하이픈(-) 삽입
   $("#phoneNum").on("input", function () {
-    let value = $(this).val().replace(/[^\d]/g, "");
+    let value = $(this).val().replace(/[^\d]/g, ""); // 숫자 이외 문자 제거
     if (value.length > 3 && value.length <= 7) {
       value = value.slice(0, 3) + "-" + value.slice(3);
     } else if (value.length > 7) {
@@ -27,23 +25,23 @@ $(function () {
     $(this).val(value);
   });
 
-   // 각 입력값 유효성 검사 규칙
+  // 입력값 유효성 검사용 정규식 모음
   const validate = {
-    userId: v => /^[a-zA-Z0-9_]{4,20}$/.test(v),
-    email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-    password: v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(v),
-    confirmPassword: (v, p) => v === p,
-    gen: v => !!v,
-    birthYear: v => !!v,
-    phoneNum: v => /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/.test(v)
+    userId: v => /^[a-zA-Z0-9_]{4,20}$/.test(v), // 영문, 숫자, 언더스코어 4~20자
+    email: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), // 이메일 기본 형식
+    password: v => /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(v), // 대소문자+숫자+특수문자+8자 이상
+    confirmPassword: (v, p) => v === p, // 비밀번호 일치 확인
+    gen: v => !!v, // 성별 선택 여부
+    birthYear: v => !!v, // 출생년도 선택 여부
+    phoneNum: v => /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})-?[0-9]{3,4}-?[0-9]{4}$/.test(v) // 전화번호 형식
   };
 
-  // 각 입력값 통과 여부 플래그
+  // 각 필드 유효성 여부 저장 변수
   let userIdValid = false, emailValid = false;
   let passwordValid = false, confirmPasswordValid = false;
   let phoneNumValid = false, genValid = false, birthYearValid = false;
 
-  // 모든 입력값이 유효할 때 제출 버튼 활성화
+  // 모든 필드 유효할 때 제출 버튼 활성화
   function toggleSubmit() {
     const allValid = userIdValid && emailValid && passwordValid && confirmPasswordValid && phoneNumValid && genValid && birthYearValid;
     const $submitBtn = $("#submitBtn");
@@ -56,7 +54,7 @@ $(function () {
     }
   }
 
-
+  // 사용자에게 메시지를 토스트 형태로 출력
   function showToast(message, type = "success") {
     const toast = $("#toast");
 
@@ -72,9 +70,9 @@ $(function () {
     }, 3500);
   }
 
-   // 아이디/이메일 fetch로 중복검사 및 유효성 검사
+  // 아이디/이메일 중복 확인 API 요청
   function checkDuplicate(field, value, $errorEl, isFormatValid, formatMsg, existsMsg, availableMsg) {
-    if (!isFormatValid(value)) {  //포맷 자체가 틀렸을 경우
+    if (!isFormatValid(value)) {
       $errorEl.text(formatMsg).removeClass("text-green-600 hidden").addClass("text-red-600");
       if (field === "userId") userIdValid = false;
       if (field === "email") emailValid = false;
@@ -86,48 +84,64 @@ $(function () {
 
     fetch(`/api/${path}?value=${encodeURIComponent(value)}`, {
       method: "GET",
-      headers: {
-        "Accept": "application/json"
-      }
+      headers: { "Accept": "application/json" }
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then(res => {
-      if (res.exists) {
-        $errorEl.text(existsMsg).removeClass("text-green-600 hidden").addClass("text-red-600");
+      .then(response => {
+        if (!response.ok) throw new Error("Network response was not ok");
+        return response.json();
+      })
+      .then(res => {
+        if (res.exists) {
+          $errorEl.text(existsMsg).removeClass("text-green-600 hidden").addClass("text-red-600");
+          if (field === "userId") userIdValid = false;
+          if (field === "email") emailValid = false;
+        } else {
+          $errorEl.text(availableMsg).removeClass("text-red-600 hidden").addClass("text-green-600");
+          if (field === "userId") userIdValid = true;
+          if (field === "email") emailValid = true;
+        }
+        toggleSubmit();
+      })
+      .catch(() => {
+        $errorEl.text("서버 오류가 발생했습니다.").addClass("text-red-600").removeClass("hidden");
         if (field === "userId") userIdValid = false;
         if (field === "email") emailValid = false;
-      } else {
-        $errorEl.text(availableMsg).removeClass("text-red-600 hidden").addClass("text-green-600");
-        if (field === "userId") userIdValid = true;
-        if (field === "email") emailValid = true;
-      }
-      toggleSubmit();
-    })
-    .catch(() => {
-      $errorEl.text("서버 오류가 발생했습니다.").addClass("text-red-600").removeClass("hidden");
-      if (field === "userId") userIdValid = false;
-      if (field === "email") emailValid = false;
-      toggleSubmit();
-    });
+        toggleSubmit();
+      });
   }
 
+  // 입력 시 중복 검사 딜레이 타이머 관리
+  let debounceTimers = {};
 
-  $("#userId").on("blur", function () {
+  // 중복 검사 지연 호출 (디바운싱)
+  function debounceCheck(field, value, $errorEl, isFormatValid, formatMsg, existsMsg, availableMsg) {
+    clearTimeout(debounceTimers[field]);
+
+    debounceTimers[field] = setTimeout(() => {
+      checkDuplicate(field, value, $errorEl, isFormatValid, formatMsg, existsMsg, availableMsg);
+    }, 500); // 0.5초 대기
+  }
+
+  // 아이디 입력 이벤트 처리
+  $("#userId").on("input", function () {
     const val = $(this).val().trim();
-    checkDuplicate("userId", val, $("#userIdError"), validate.userId, "4~20자의 영문/숫자/언더스코어만 사용 가능합니다.", "이미 존재하는 아이디입니다.", "사용가능한 아이디입니다.");
+    debounceCheck("userId", val, $("#userIdError"), validate.userId,
+      "4~20자의 영문/숫자/언더스코어만 사용 가능합니다.",
+      "이미 존재하는 아이디입니다.",
+      "사용가능한 아이디입니다.");
   });
 
-  $("#email").on("blur", function () {
+  // 이메일 입력 이벤트 처리
+  $("#email").on("input", function () {
     const val = $(this).val().trim();
-    checkDuplicate("email", val, $("#emailError"), validate.email, "올바른 이메일 주소를 입력해주세요.", "이미 존재하는 이메일입니다.", "사용가능한 이메일입니다.");
+    debounceCheck("email", val, $("#emailError"), validate.email,
+      "올바른 이메일 주소를 입력해주세요.",
+      "이미 존재하는 이메일입니다.",
+      "사용가능한 이메일입니다.");
   });
 
-  $("#password").on("blur", function () {
+  // 비밀번호 입력 시 유효성 검사
+  $("#password").on("input", function () {
     const val = $(this).val();
     const $err = $("#passwordError");
 
@@ -141,16 +155,14 @@ $(function () {
     toggleSubmit();
   });
 
-    // 비밀번호 일치여부
-  $("#confirmPassword").on("blur", function () {
+  // 비밀번호 확인 입력 시 일치 여부 검사
+  $("#confirmPassword").on("input", function () {
     const val = $(this).val();
     const passwordVal = $("#password").val();
     const $err = $("#confirmPasswordError");
 
     if (!validate.confirmPassword(val, passwordVal)) {
-      $err.text("비밀번호가 일치하지 않습니다.")
-      .removeClass("text-green-600 hidden")
-      .addClass("text-red-600");
+      $err.text("비밀번호가 일치하지 않습니다.").removeClass("text-green-600 hidden").addClass("text-red-600");
       confirmPasswordValid = false;
     } else {
       $err.text("비밀번호가 일치합니다.").removeClass("text-red-600 hidden").addClass("text-green-600");
@@ -159,6 +171,7 @@ $(function () {
     toggleSubmit();
   });
 
+  // 전화번호 입력 종료 후 유효성 검사
   $("#phoneNum").on("blur", function () {
     const val = $(this).val();
     const $err = $("#phoneNumError");
@@ -173,6 +186,7 @@ $(function () {
     toggleSubmit();
   });
 
+  // 성별, 출생연도 blur 이벤트로 유효성 검사
   $("#gen, #birthYear").on("blur", function () {
     const id = this.id;
     const val = $(this).val();
@@ -192,7 +206,7 @@ $(function () {
     toggleSubmit();
   });
 
-// 회원가입 fetch 요청
+  // 폼 제출 이벤트 처리
   $("#registerForm").on("submit", function (e) {
     e.preventDefault();
 
@@ -207,19 +221,19 @@ $(function () {
       method: "POST",
       body: formData
     })
-    .then(response => {
-      if (response.ok) {
-        showToast("회원가입 성공!", "success");
-        setTimeout(() => window.location.href = "/login", 1000);
-      } else {
-        return response.json().then(data => {
-          showToast(data.message || "회원가입 실패", "error");
-        });
-      }
-    })
-    .catch(error => {
-      console.error(error);
-      showToast("서버 오류가 발생했습니다", "error");
-    });
+      .then(response => {
+        if (response.ok) {
+          showToast("회원가입 성공!", "success");
+          setTimeout(() => window.location.href = "/login", 1000);
+        } else {
+          return response.json().then(data => {
+            showToast(data.message || "회원가입 실패", "error");
+          });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        showToast("서버 오류가 발생했습니다", "error");
+      });
   });
 });
